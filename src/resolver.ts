@@ -1,12 +1,13 @@
 import { Utils } from './utils';
+import { CountryMeasures, Indicator } from './types';
 import { Bank, parseRows } from './bank';
-import { Indicator } from './types';
+import { Resolver, Query, Arg } from "type-graphql";
 
-export class Controller {
-  //returns
-  //average yearly population in this millenia per country
-  //GDP per capita (USD) change from 1970 to 2018 per country
-  static async getValues(countryCodes: String[]) {
+@Resolver(CountryMeasures)
+class CountryMeasuresResolver {
+
+  @Query(returns => [CountryMeasures])
+  async measures(@Arg("countries", type => [String]) countryCodes: string[]) {
     const countries = countryCodes.map(Utils.codeToCountry);
     const json = await Bank.getData(countries, [Indicator.Population, Indicator.Gdp]);
     const now = new Date().getFullYear();
@@ -14,9 +15,11 @@ export class Controller {
     const ret = countries.map(country => {
       const avgPopulation = Utils.averageYearlyPopulation(countryData, country, 2000, now);
       const gdpPerCapitaChange = Utils.gdpPerCapitaChange(countryData, country, 1970, 2018);
-      return { country: country.iso, avgPopulation: avgPopulation, gdpPerCapitaChange: gdpPerCapitaChange };
+      return new CountryMeasures(country.iso, gdpPerCapitaChange, avgPopulation);
     });
-
     return ret;
   }
+
 }
+
+export const resolvers = [CountryMeasuresResolver] as const;

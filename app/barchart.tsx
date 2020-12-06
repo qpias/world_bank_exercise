@@ -56,11 +56,11 @@ export default class BarChart extends React.Component<CustomInputProps, { errors
         <h1>{this.props.measure}</h1>
         <h3>{this.state.errors}</h3>
         <div id={"#bar"} ref={"bar"}>
-          <br/>
           <input type="text" ref={this.input2} defaultValue={"FI"}/>
           <input type="text" ref={this.input1} defaultValue={"BR"}/>
           <input type="text" ref={this.input3} defaultValue={"CN"}/>
-          <button onClick={this.redraw}>click me</button>
+          <button onClick={this.redraw}>update countries</button>
+          <br/>
         </div>
       </div>);
   }
@@ -92,15 +92,26 @@ export default class BarChart extends React.Component<CustomInputProps, { errors
     this.setState({
       errors: ''
     });
-    const uri = 'http://localhost:8000/api/?countries=' + countries.join(';');
-    const response = await fetch(uri);
+    const countryString = JSON.stringify(countries);
+    const uri = 'http://localhost:7000';
+    const response = await fetch(uri, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({query: '{ measures(countries:' + countryString + ')	{country ' + this.props.measure + '}	}'})
+    });
+
     if (! response.ok) {
       const errorJson = await response.json();
       this.setState({
         errors: errorJson.error
       });
     }
-    return await response.json();
+
+    const json = await response.json();
+    return json.data.measures;
   }
 
   redraw = async () => {

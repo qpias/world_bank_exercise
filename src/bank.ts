@@ -4,17 +4,15 @@ import type { Country } from 'typed-countries';
 import { Utils } from './utils';
 import { Indicator, CountryData, Parser } from './types';
 
+//client for the World Bank API
 export class Bank {
-
-
-    private static populationIndicator = 'SP.POP.TOTL';
-    private static gdpIndicator = 'NY.GDP.MKTP.CD';
-    static indicatorMappings: Map<String, Indicator> = new Map([
-          [Bank.populationIndicator, Indicator.Population],
-          [Bank.gdpIndicator, Indicator.Gdp]
-      ]);
-
-
+  //mappings for the World Bank API indicator names
+  private static populationIndicator = 'SP.POP.TOTL';
+  private static gdpIndicator = 'NY.GDP.MKTP.CD';
+  static indicatorMappings: Map<String, Indicator> = new Map([
+      [Bank.populationIndicator, Indicator.Population],
+      [Bank.gdpIndicator, Indicator.Gdp]
+  ]);
 
   //fetches the data from world bank
   static async getData(countries: Country[], indicators: Indicator[]) {
@@ -44,7 +42,7 @@ export class Bank {
 
 }
 
-//implements Parser for world bank data
+//implements Parser for World Bank data
 //TODO: can we do this without "let"?
 let parseRows: Parser
 parseRows = function (json: Object): CountryData[] {
