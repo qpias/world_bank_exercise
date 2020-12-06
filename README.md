@@ -12,10 +12,10 @@ Based on https://github.com/nucleode/typescript-microservice-starter boilerplate
 
 ## API files description
 
-* src/bank.ts accessor for the World Bank api
+* src/bank.ts accessor for the World Bank API
 * src/controller.ts controller class for the "business logic"
 * src/index.ts mainly just the Express server
-* src/types.ts various TypeScript type definition to make coding more fun
+* src/types.ts various TypeScript type definitions to make coding more fun
 * src/utils.ts methods to calculate required values and country code handling
 
 ## UI files description
@@ -27,7 +27,7 @@ Based on https://github.com/nucleode/typescript-microservice-starter boilerplate
 ## Test files description
 
 * test/index.ts all the tests in the same file
-* data.json example World Bank API json for testing the parsing and calculations.
+* test/data.json example World Bank API json for testing the parsing and calculations.
 
 ## Features
 
