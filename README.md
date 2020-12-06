@@ -4,9 +4,11 @@
 [![tslint](https://img.shields.io/badge/linted%20by-TSLint-brightgreen.svg)](https://palantir.github.io/tslint/)
 [![tested with node](https://img.shields.io/badge/tested%20with-node--tap-yellow.svg)](https://github.com/tapjs/node-tap)
 
-Simple API and a quick, hacky, crappy UI to explore some World Bank data. Based on https://github.com/nucleode/typescript-microservice-starter boilerplate with some added configs for the React UI. Most of the below content is from the readme for this boilerplate project.
+Simple API and a quick, hacky, crappy UI to explore some World Bank data. I would not normally put the API and UI in the same microservice but I did not want to start a new project for the UI since it is just to showcase the API.
 
-Start the dev server and see the UI at http://localhost:8000/ and the API at http://localhost:8000/api/?countries=BR;CN;FI. You can play around with the country params but some countries are missing required data and will not work. Error handling is included. And some tests too.
+Install and start the dev server as described below and see the UI at http://localhost:8000/ and the API at http://localhost:8000/api/?countries=BR;CN;FI. You can play around with the country params but some countries are missing required data and will not work. Error handling is included. And some tests too to test that.
+
+Based on https://github.com/nucleode/typescript-microservice-starter boilerplate with some added configs for the React UI. Most of the below content is from the readme for this boilerplate project.
 
 ## API files description
 
