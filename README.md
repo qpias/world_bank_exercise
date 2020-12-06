@@ -1,10 +1,20 @@
-# TypeScript Microservice Starter ![microlib](https://user-images.githubusercontent.com/6388707/58275504-7818c880-7d95-11e9-84af-f8aa50b93d5f.png)
+# TypeScript World Bank Example Microservice ![microlib](https://user-images.githubusercontent.com/6388707/58275504-7818c880-7d95-11e9-84af-f8aa50b93d5f.png)
 
 [![styled with prettier](https://img.shields.io/badge/styled%20with-Prettier-blue.svg)](https://github.com/prettier/prettier)
 [![tslint](https://img.shields.io/badge/linted%20by-TSLint-brightgreen.svg)](https://palantir.github.io/tslint/)
 [![tested with node](https://img.shields.io/badge/tested%20with-node--tap-yellow.svg)](https://github.com/tapjs/node-tap)
 
-This is an easy boilerplate for building Node.js microservices with TypeScript. Put your typescript code inside `./src` folder and you are ready to go!
+Simple API and a quick, hacky, crappy UI to explore some World Bank data. Based on https://github.com/nucleode/typescript-microservice-starter boilerplate with some added configs for the React UI. Most of the below content is from the readme for this boilerplate project.
+
+Start the dev server and see the UI at http://localhost:8000/ and the API at http://localhost:8000/api/?countries=BR;CN;FI. You can play around with the country params but some countries are missing required data and will not work. Error handling is included. And some tests too.
+
+## API files description
+
+* bank.ts accessor for the World Bank api
+* controller.ts controller class for the "business logic"
+* index.ts mainly just the Express server
+* types.ts various TypeScript type definition to make coding more fun
+* utils.ts methods to calculate required values and country code handling
 
 ## Features
 
@@ -17,7 +27,7 @@ This is an easy boilerplate for building Node.js microservices with TypeScript. 
 
 ```
 # Clone the repo
-git clone https://github.com/nucleode/typescript-microservice-starter.git {your_project_name}
+git clone https://github.com/qpias/world_bank_exercise.git {your_project_name}
 cd {your_project_name}
 
 # Remove reference to the original starter
