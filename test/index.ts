@@ -1,4 +1,5 @@
 import { test } from 'tap';
+import 'reflect-metadata';
 import { Utils } from '../src/utils';
 import { parseRows } from '../src/bank';
 const data = require('./data.json');

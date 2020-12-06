@@ -2,8 +2,8 @@ import type { Country } from 'typed-countries';
 import { countries } from 'typed-countries';
 import { Indicator, CountryData } from './types';
 
+//collection of utilities
 export class Utils {
-
 
   //parse country from iso code or fail
   static codeToCountry(code: String): Country {

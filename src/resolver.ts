@@ -3,12 +3,14 @@ import { CountryMeasures, Indicator } from './types';
 import { Bank, parseRows } from './bank';
 import { Resolver, Query, Arg } from "type-graphql";
 
+//a kind of controller to handle the graphql requests
 @Resolver(CountryMeasures)
 class CountryMeasuresResolver {
 
   @Query(returns => [CountryMeasures])
   async measures(@Arg("countries", type => [String]) countryCodes: string[]) {
     const countries = countryCodes.map(Utils.codeToCountry);
+    //TODO: Bank could also be injected instead
     const json = await Bank.getData(countries, [Indicator.Population, Indicator.Gdp]);
     const now = new Date().getFullYear();
     const countryData = parseRows(json);

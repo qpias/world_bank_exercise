@@ -3,26 +3,30 @@ import 'regenerator-runtime/runtime'
 import * as React from 'react';
 import * as d3 from 'd3';
 
-//Do we really need this to use props on custom classes?
 interface CustomInputProps {
     measure: string;
 }
-export default class BarChart extends React.Component<CustomInputProps, { errors: string }> {
-  private input1: React.RefObject<HTMLInputElement>;
-  private input2: React.RefObject<HTMLInputElement>;
-  private input3: React.RefObject<HTMLInputElement>;
+export default class BarChart extends React.Component<CustomInputProps, { errors: string, countries: string[] }> {
 
   constructor(props) {
     super(props);
-    this.state = {errors: ''};
-    this.input1 = React.createRef();
-    this.input2 = React.createRef();
-    this.input3 = React.createRef();
+    this.state = {errors: '', countries: ['BR', 'CN', 'FI']};
   }
 
   async componentDidMount(): Promise<void> {
-    const json = await this.getData(['BR', 'CN', 'FI']);
+    const json = await this.getData(this.state.countries);
     this.drawChart(this.createChartData(json));
+  }
+
+  //track the inputs
+  handleChange = (e) => {
+    //inputs are indexed by name
+    const countryIndex = +(e.target.name.replace('input', ''));
+    const countries = this.state.countries;
+    countries[countryIndex] = e.target.value;
+    this.setState({
+      countries: countries
+    });
   }
 
   drawChart = (data) => {
@@ -56,9 +60,9 @@ export default class BarChart extends React.Component<CustomInputProps, { errors
         <h1>{this.props.measure}</h1>
         <h3>{this.state.errors}</h3>
         <div id={"#bar"} ref={"bar"}>
-          <input type="text" ref={this.input2} defaultValue={"FI"}/>
-          <input type="text" ref={this.input1} defaultValue={"BR"}/>
-          <input type="text" ref={this.input3} defaultValue={"CN"}/>
+          <input type="text" name="input0" defaultValue={this.state.countries[0]} onChange={this.handleChange}/>
+          <input type="text" name="input1" defaultValue={this.state.countries[1]} onChange={this.handleChange}/>
+          <input type="text" name="input2" defaultValue={this.state.countries[2]} onChange={this.handleChange}/>
           <button onClick={this.redraw}>update countries</button>
           <br/>
         </div>
@@ -88,11 +92,14 @@ export default class BarChart extends React.Component<CustomInputProps, { errors
     return data;
   }
 
+  //TODO: this method should really be passed to the component, or something...
   getData = async (countries: string[]) => {
     this.setState({
       errors: ''
     });
-    const countryString = JSON.stringify(countries);
+    //support lowercase codes in the inputs too
+    const countryString = JSON.stringify(countries.map(s => s.toUpperCase()));
+    //let's not make this too fancy...
     const uri = 'http://localhost:7000';
     const response = await fetch(uri, {
       method: 'POST',
@@ -103,6 +110,7 @@ export default class BarChart extends React.Component<CustomInputProps, { errors
       body: JSON.stringify({query: '{ measures(countries:' + countryString + ')	{country ' + this.props.measure + '}	}'})
     });
 
+    //TODO: the error handling here is just a quick hack...
     if (! response.ok) {
       const errorJson = await response.json();
       this.setState({
@@ -111,14 +119,22 @@ export default class BarChart extends React.Component<CustomInputProps, { errors
     }
 
     const json = await response.json();
+    if (json.errors != undefined) {
+      this.setState({
+        errors: json.errors[0].message
+      });
+    }
+    console.log(json)
     return json.data.measures;
   }
 
   redraw = async () => {
-    const input1 = this.input1.current ? this.input1.current.value : '';
-    const input2 = this.input2.current ? this.input2.current.value : '';
-    const input3 = this.input3.current ? this.input3.current.value : '';
-    const json = await this.getData([input1, input2, input3]);
-    this.drawChart(this.createChartData(json));
+    try {
+      const json = await this.getData(this.state.countries);
+      this.drawChart(this.createChartData(json));
+    }
+    catch(e) {
+      console.log('awesome error handling: ' + e);
+    }
   }
 }
