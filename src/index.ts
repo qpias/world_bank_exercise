@@ -1,21 +1,20 @@
 // Using Promises without this module might cause file descriptor and memory leaks: https://github.com/mcollina/make-promises-safe
 import 'make-promises-safe';
-import { Bank } from './bank';
-import { Utils } from './utils';
+import { Controller } from './controller';
 
-//export default () => 'put your code here'
 import express from 'express';
 const app = express();
 const PORT = 8000;
 
+app.use('/', express.static('dist'));
 
-app.get('/', async (req, res, next) => {
+app.get('/api', async (req, res, next) => {
   const query = req.query.countries;
   try {
     //validate the query
     if (query == undefined || query == '') throw new Error('missing param "countries"');
-    const countries = query.split(";").map(Utils.codeToCountry);
-    const json = await Bank.get(countries);
+    const countryCodes = query.split(";");
+    const json = await Controller.getValues(countryCodes);
     res.send(json);
   }
   catch(e) {
@@ -23,5 +22,10 @@ app.get('/', async (req, res, next) => {
   }
 });
 app.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
+  console.log(`[server]: Server is running at https://localhost:${PORT}`);
+});
+
+app.use((err, req, res, next) => {
+  if (!err.statusCode) err.statusCode = 500; // If err has no specified error code, set error code to 'Internal Server Error (500)'
+  res.status(err.statusCode).send({error : err.message});
 });
